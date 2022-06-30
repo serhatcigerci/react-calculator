@@ -102,8 +102,7 @@ function App() {
       <OperationButton operation="-" dispatch={dispatch} />
       <DigitButton digit="." dispatch={dispatch} />
       <DigitButton digit="0" dispatch={dispatch} />
-      <DigitButton digit="π" dispatch={dispatch} />
-      <button className="span-one">=</button>
+      <button className="span-two">=</button>
     </div>
   );
 }
