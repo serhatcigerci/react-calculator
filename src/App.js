@@ -29,51 +29,68 @@ function reducer(state, { type, payload }) {
         ...state,
         currentOperand: `${state.currentOperand || ""}${payload.digit}`,
       }
-      case ACTIONS.CHOOSE_OPERATION:
-        if(state.currentOperand == null && state.previousOperand == null) {
-          return state
-        }
+    case ACTIONS.CHOOSE_OPERATION:
+      if(state.currentOperand == null && state.previousOperand == null) {
+        return state
+      }
 
-        if (state.currentOperand == null) {
-          return {
-            ...state,
-            operation: payload.operation,
-          }
-        }
-
-        if (state.previousOperand == null) {
-          return {
-            ...state,
-            operation: payload.operation,
-            previousOperand: state.currentOperand,
-            currentOperand: null
-          }
-        }
-
+      if (state.currentOperand == null) {
         return {
           ...state,
-          previousOperand: evaluate(state),
           operation: payload.operation,
+        }
+      }
+
+      if (state.previousOperand == null) {
+        return {
+          ...state,
+          operation: payload.operation,
+          previousOperand: state.currentOperand,
           currentOperand: null
         }
-      case ACTIONS.CLEAR:
-        return {}
-      case ACTIONS.EVALUATE:
-        if (
-          state.operation == null ||
-          state.currentOperand == null ||
-          state.previousOperand == null 
-        ) { 
-          return state
-        }
+      }
+
+      return {
+        ...state,
+        previousOperand: evaluate(state),
+        operation: payload.operation,
+        currentOperand: null
+      }
+    case ACTIONS.CLEAR:
+      return {}
+    case ACTIONS.DELETE_DIGIT:
+      if (state.overwrite) {
         return {
           ...state,
-          overwrite: true,
-          previousOperand: null,
-          operation: null,
-          currentOperand: evaluate(state),
+          overwrite: false,
+          currentOperand: null,
         }
-  }
+     }
+     if (state.currentOperand === null) return state
+     if(state.currentOperand.length === 1) {
+      return { ...state, currentOperand: null }
+     }
+
+     return {
+      ...state,
+      currentOperand: state.currentOperand.slice(0, -1)
+     }
+    case ACTIONS.EVALUATE:
+      if (
+        state.operation == null ||
+        state.currentOperand == null ||
+        state.previousOperand == null 
+      ) { 
+        return state
+      }
+      return {
+        ...state,
+        overwrite: true,
+        previousOperand: null,
+        operation: null,
+        currentOperand: evaluate(state),
+      }
+}
 }
 
 
@@ -110,7 +127,7 @@ function App() {
         <div className="current-operand">{(currentOperand)}</div>
       </div>
       <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button>
-      <button>DEL</button>
+      <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
       <OperationButton operation="÷" dispatch={dispatch} />
       <DigitButton digit="1" dispatch={dispatch} />
       <DigitButton digit="2" dispatch={dispatch} />
