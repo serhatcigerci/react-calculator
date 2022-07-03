@@ -116,6 +116,13 @@ function evaluate({ currentOperand, previousOperand, operation}) {
   return computation.toString()
 }
 
+const INTEGER_FORMATTER = new Intl.NumberFormat("en-us", {
+  maximumFractionDigits: 0,
+})
+
+function formatOperand(operand) {
+  if (operand == null) return
+}
 function App() {
   const [{ currentOperand, previousOperand, operation }, 
     dispatch] = useReducer(reducer, {})
