@@ -4,7 +4,6 @@ import "./styles.css"
 import DigitButton from "./DigitButton"
 import OperationButton from "./OperationButton"
 
-
 export const ACTIONS = {
   ADD_DIGIT: 'add-digit',
   CHOOSE_OPERATION: 'choose-operation',
